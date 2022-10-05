@@ -298,6 +298,8 @@ function execute()
 		
 		["and"] = "a{{aieixzvzx:nd}}",
 		["or"] = "o{{aieixzvzx:r}}",
+		["up"] = "u{{aieixzvzx:p}}",
+		["down"] = "do{{aieixzvzx:wn}}",
 		["if"] = "i{{aieixzvzx:f}}",
 		["else"] = "el{{aieixzvzx:se}}",
 		["then"] = "th{{aieixzvzx:en}}",
