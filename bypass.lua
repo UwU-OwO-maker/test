@@ -22,7 +22,7 @@ local filteredString = Chat:FilterStringForBroadcast(message, playerFrom)
 
 
 local queueonteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
-queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/daddysyn/synergy/additional/betterbypasser'))()")
+queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/UwU-OwO-maker/test/main/bypass.lua'))()")
 
 function execute()
 
@@ -327,14 +327,12 @@ function execute()
 		["night"] = "ni{{aieixzvzx:ght}}",
 		["get"] = "ge{{aieixzvzx:t}}",
 		["come"] = "co{{aieixzvzx:me}}",
-		["it"] = "i{{aieixzvzx:t}}",
 		["some"] = "so{{aieixzvzx:me}}",
 		["there"] = "the{{aieixzvzx:re}}",
 		["but"] = "bu{{aieixzvzx:t}}",
 		["more"] = "mo{{aieixzvzx:re}}",
 		["all"] = "a{{aieixzvzx:ll}}",
 		["get"] = "ge{{aieixzvzx:t}}",
-		["its"] = "i{{aieixzvzx:ts}}",
 		["yes"] = "ye{{aieixzvzx:s}}",
 		["no"] = "n{{aieixzvzx:o}}",
 		["so"] = "s{{aieixzvzx:o}}",
@@ -406,56 +404,6 @@ function execute()
 		}
 
 	end
-
-
-
-	NotificationHolder:message {
-		Title = "Discord Server",
-		Description = "Would you like to join the Discord Server?",
-		Accept = {
-			Text = "Yes",
-			Callback = function()
-				requestt(
-					{
-						Url = "http://127.0.0.1:6463/rpc?v=1",
-						Method = "POST",
-						Headers = {["Content-Type"] = "application/json", ["Origin"] = "https://discord.com"},
-						Body = game:GetService("HttpService"):JSONEncode(
-							{
-								cmd = "INVITE_BROWSER",
-								args = {code = "s4PxTVMUZp"},
-								nonce = game:GetService("HttpService"):GenerateGUID(false)
-							}
-						)
-					}
-				)
-			end
-		},
-		Dismiss = {Text = "No", Callback = function()
-			NotificationHolder:message {Title = "<font color='rgb(240,248,255)'>Warning</font>", Description = "fuck you then im gonna invite you anyway bitch", Icon = 10952973359}
-
-				wait(0.5)
-				requestt(
-					{
-						Url = "http://127.0.0.1:6463/rpc?v=1",
-						Method = "POST",
-						Headers = {["Content-Type"] = "application/json", ["Origin"] = "https://discord.com"},
-						Body = game:GetService("HttpService"):JSONEncode(
-							{
-								cmd = "INVITE_BROWSER",
-								args = {code = "s4PxTVMUZp"},
-								nonce = game:GetService("HttpService"):GenerateGUID(false)
-							}
-						)
-					}
-				)
-
-			end}
-	}
-
-
-
-
 
 
 	wait(10)
