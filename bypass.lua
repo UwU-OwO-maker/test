@@ -148,6 +148,7 @@ function execute()
 		["nigger"] = "ni{{aieixzvzx:gger}}",
 		["niggers"] = "ni{{aieixzvzx:ggers}}",
 		["piss"] = "p{{aieixzvzx:iss}}", 
+		["tranny"] = "tr{{aieixzvzx:anny}}", 
 		["pisses"] = "p{{aieixzvzx:isses}}",  
 		["pissing"] = "p{{aieixzvzx:is}}sing", --NEW
 		["pisser"] = "pi{{aieixzvzx:sser}}", --NEW
