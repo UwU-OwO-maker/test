@@ -110,8 +110,8 @@ function execute()
 
 	local Bypasses = {
 
-		["ass"] = "as{{aieixzvzx:s}}",
-		["asshole"] = "as{{aieixzvzx:shole}}",
+		["ass"] = "a{{aieixzvzx:ss}}",
+		["asshole"] = "a{{aieixzvzx:sshole}}",
 		["deadass"] = "dead as{{aieixzvzx:s}}",
 		["arse"] = "ar{{aieixzvzx:se}}", --NEW
 		["arsehead"] = "ar{{aieixzvzx:se}}head", --NEW
