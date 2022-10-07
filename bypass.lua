@@ -347,7 +347,7 @@ function execute()
 		["so"] = "s{{aieixzvzx:o}}",
 		["said"] = "sa{{aieixzvzx:id}}",
 		["can"] = "ca{{aieixzvzx:n}}",
-		["we"] = "w{{aieixzvzx:e}}",
+		["we"] = "w{{aieixzvzx:e}}"
 
 		
 	}
