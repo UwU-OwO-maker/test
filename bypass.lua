@@ -325,6 +325,7 @@ function execute()
 		["on"] = "o{{aieixzvzx:n}}",
 		["as"] = "a{{aieixzvzx:s}}",
 		["you"] = "yo{{aieixzvzx:u}}",
+		["eat"] = "e{{aieixzvzx:at}}",
 		["my"] = "m{{aieixzvzx:y}}",
 		["have"] = "h{{aieixzvzx:ave}}",
 		["yours"] = "you{{aieixzvzx:rs}}",
