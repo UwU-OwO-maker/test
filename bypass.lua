@@ -121,6 +121,8 @@ function execute()
 		["cock"] = "co{{aieixzvzx:ck}}",
 		["cocks"] = "co{{aieixzvzx:cks}}",  
 		["cunt"] = "cu{{aieixzvzx:nt}}",
+		["cunts"] = "cu{{aieixzvzx:nts}}",
+		["titties"] = "ti{{aieixzvzx:tties}}",
 		["dick"] = "di{{zczxczvz:ck}}",
 		["dickhead"] = "di{{zczxczvz:ckhead}}",
 		["dicks"] = "di{{zczxczvz:cks}}",  
