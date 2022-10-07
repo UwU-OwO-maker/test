@@ -137,6 +137,7 @@ function execute()
 		["bastard"] = "bas{{aieixzvzx:tard}}",  --NEW
 		["bastards"] = "bas{{aieixzvzx:tards}}",  --NEW
 		["kike"] = "ki{{aieixzvzx:ke}}",
+		["fat"] = "f{{aieixzvzx:at}}",
 		["kikes"] = "ki{{aieixzvzx:kes}}",  
 		["motherfucker"] = "motherf{{aieixzvzx:ucker}}",
 		["brotherfucker"] = "brotherf{{aieixzvzx:ucker}}", --NEW
