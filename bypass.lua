@@ -1,4 +1,5 @@
 if not getgenv() then return end
+
 if not getgenv().method or getgenv().method == nil then
 	getgenv().method = "fn"
 end
