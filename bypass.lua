@@ -173,6 +173,7 @@ function execute()
 		["kills"] = "ki{{aieixzvzx:lls}}",  
 		["killing"] = "ki{{aieixzvzx:lling}}",  
 		["gay"] = "g{{aieixzvzx:ay}}",
+		["inside"] = "i{{aieixzvzx:nside}}",
 		["gays"] = "g{{aieixzvzx:ays}}",
 		["sex"] = "se{{aieixzvzx:x}}",
 		["sexy"] = "se{{aieixzvzx:xy}}",
