@@ -260,6 +260,10 @@ function execute()
 		["muslim"] = "mu{{aieixzvzx:slim}}",
 		["jurdism"] = "jur{{aieixzvzx:dism}}",
 		["islam"] = "isl{{aieixzvzx:am}}",
+		["masturbate"] = "mas{{aieixzvzx:turbate}}",
+		["masturbates"] = "mas{{aieixzvzx:turbates}}",
+		["tittys"] = "ti{{aieixzvzx:ttys}}",
+		["tits"] = "ti{{aieixzvzx:ts}}",
 		["allah"] = "al{{aieixzvzx:lah}}",
 		["muhammad"] = "muha{{aieixzvzx:mmad}}",
 		["christianity"] = "chri{{aieixzvzx:stianity}}",
@@ -321,6 +325,7 @@ function execute()
 		["as"] = "a{{aieixzvzx:s}}",
 		["you"] = "yo{{aieixzvzx:u}}",
 		["my"] = "m{{aieixzvzx:y}}",
+		["have"] = "h{{aieixzvzx:ave}}",
 		["yours"] = "you{{aieixzvzx:rs}}",
 		["not"] = "no{{aieixzvzx:t}}",
 		["with"] = "wi{{aieixzvzx:th}}",
@@ -341,6 +346,7 @@ function execute()
 		["so"] = "s{{aieixzvzx:o}}",
 		["said"] = "sa{{aieixzvzx:id}}",
 		["can"] = "ca{{aieixzvzx:n}}"
+		["we"] = "w{{aieixzvzx:e}}",
 
 		
 	}
