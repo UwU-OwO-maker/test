@@ -161,7 +161,8 @@ function execute()
 		["shitting"] = "sh{{aieixzvzx:itting}}",  
 		["shitty"] = "shi{{aieixzvzx:tty}}",
 		["horseshit"] = "horsesh{{aieixzvzx:it}}", --NEW
-		["jerk"] = "je{{aieixzvzx:rk}}", --NEW
+		["jerk"] = "je{{aieixzvzx:rk}}",
+		["jerks"] = "je{{aieixzvzx:rks}}",--NEW
 		["jerking"] = "jer{{aieixzvzx:king}}", --NEW
 		["slut"] = "sl{{aieixzvzx:ut}}",
 		["sluts"] = "sl{{aieixzvzx:uts}}",  
