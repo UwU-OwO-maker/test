@@ -211,6 +211,7 @@ function execute()
 		["thot"] = "th{{aieixzvzx:ot}}",
 		["thots"] = "th{{aieixzvzx:ots}}",  
 		["bang"] = "ban{{aieixzvzx:g}}",
+		["please"] = "ple{{aieixzvzx:ase}}",
 		["ligma"] = "li{{aieixzvzx:gma}}",
 		["ligmaballs"] = "ligm{{aieixzvzx:aballs}}",
 		["terrorist"] = "terror{{aieixzvzx:ist}}",
