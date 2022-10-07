@@ -302,8 +302,8 @@ function execute()
 		["stfu"] = "st{{aieixzvzx:fu}}",
 		["ily"] = "il{{aieixzvzx:y}}",
 		["istg"] = "is{{aieixzvzx:tg}}",
-
-		
+		["your"] = "y{{aieixzvzx:our}}",
+		["that"] = "th{{aieixzvzx:at}}",
 		["and"] = "a{{aieixzvzx:nd}}",
 		["or"] = "o{{aieixzvzx:r}}",
 		["up"] = "u{{aieixzvzx:p}}",
@@ -319,6 +319,7 @@ function execute()
 		["do"] = "d{{aieixzvzx:o}}",
 		["to"] = "t{{aieixzvzx:o}}",
 		["of"] = "o{{aieixzvzx:f}}",
+		["onlyfans"] = "on{{aieixzvzx:lyfans}}",
 		["he"] = "h{{aieixzvzx:e}}",
 		["she"] = "sh{{aieixzvzx:e}}",
 		["they"] = "th{{aieixzvzx:ey}}",
@@ -331,6 +332,7 @@ function execute()
 		["my"] = "m{{aieixzvzx:y}}",
 		["have"] = "h{{aieixzvzx:ave}}",
 		["yours"] = "you{{aieixzvzx:rs}}",
+		["want"] = "wa{{aieixzvzx:nt}}",
 		["not"] = "no{{aieixzvzx:t}}",
 		["with"] = "wi{{aieixzvzx:th}}",
 		["number"] = "numb{{aieixzvzx:er}}",
