@@ -338,6 +338,8 @@ function execute()
 		["day"] = "da{{aieixzvzx:y}}",
 		["night"] = "ni{{aieixzvzx:ght}}",
 		["get"] = "ge{{aieixzvzx:t}}",
+		["the"] = "th{{aieixzvzx:e}}",
+		["shut"] = "s{{aieixzvzx:hut}}",
 		["come"] = "co{{aieixzvzx:me}}",
 		["some"] = "so{{aieixzvzx:me}}",
 		["there"] = "the{{aieixzvzx:re}}",
