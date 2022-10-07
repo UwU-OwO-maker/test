@@ -262,7 +262,7 @@ function execute()
 		["jurdism"] = "jur{{aieixzvzx:dism}}",
 		["islam"] = "isl{{aieixzvzx:am}}",
 		["masturbate"] = "mas{{aieixzvzx:turbate}}",
-		["masturbates"] = "mastu{{aieixzvzx:rbates}}",
+		["masturbates"] = "ma{{aieixzvzx:sturbates}}",
 		["tittys"] = "ti{{aieixzvzx:ttys}}",
 		["tits"] = "ti{{aieixzvzx:ts}}",
 		["allah"] = "al{{aieixzvzx:lah}}",
