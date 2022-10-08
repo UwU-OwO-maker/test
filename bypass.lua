@@ -110,8 +110,8 @@ function execute()
 
 	local Bypasses = {
 
-		["ass"] = "a{{aieixzvzx:ss}}",
-		["asshole"] = "a{{aieixzvzx:sshole}}",
+		["ass"] = "as{{aieixzvzx:s}}",
+		["asshole"] = "as{{aieixzvzx:shole}}",
 		["deadass"] = "dead as{{aieixzvzx:s}}",
 		["arse"] = "ar{{aieixzvzx:se}}", --NEW
 		["arsehead"] = "ar{{aieixzvzx:se}}head", --NEW
@@ -139,7 +139,7 @@ function execute()
 		["bastard"] = "bas{{aieixzvzx:tard}}",  --NEW
 		["bastards"] = "bas{{aieixzvzx:tards}}",  --NEW
 		["kike"] = "ki{{aieixzvzx:ke}}",
-		["fat"] = "f{{aieixzvzx:at}}",
+		["fat"] = "fa{{aieixzvzx:t}}",
 		["kikes"] = "ki{{aieixzvzx:kes}}",  
 		["motherfucker"] = "motherf{{aieixzvzx:ucker}}",
 		["brotherfucker"] = "brotherf{{aieixzvzx:ucker}}", --NEW
