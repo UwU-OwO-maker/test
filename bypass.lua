@@ -305,7 +305,7 @@ function execute()
 		["ily"] = "il{{aieixzvzx:y}}",
 		["istg"] = "is{{aieixzvzx:tg}}",
 		["your"] = "y{{aieixzvzx:our}}",
-		["that"] = "th{{aieixzvzx:at}}",
+		["that"] = "tha{{aieixzvzx:t}}",
 		["and"] = "a{{aieixzvzx:nd}}",
 		["or"] = "o{{aieixzvzx:r}}",
 		["up"] = "u{{aieixzvzx:p}}",
