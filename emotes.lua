@@ -1,511 +1,235 @@
---keybind to open is comma
---made by Gi#7331
 
-local ContextActionService = game:GetService("ContextActionService")
+repeat task.wait() until game:GetService("Players").LocalPlayer
+if not game:GetService("StarterPlayer").UserEmotesEnabled then return end
+
 local HttpService = game:GetService("HttpService")
-local GuiService = game:GetService("GuiService")
-local CoreGui = game:GetService("CoreGui")
-local Players = game:GetService("Players")
-local StarterGui = game:GetService("StarterGui")
-local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = game:GetService("Players").LocalPlayer
 
-local Emotes = {}
-local function AddEmote(name: string, id: IntValue, price: IntValue?)
-	if not (name and id) then
+local Emotes, EmoteChoices, RealNames = loadstring(game:HttpGet('https://raw.githubusercontent.com/finayv2/EmoteRBLX/main/Emotes.lua'))();
+
+local EquippedEmotes = {
+    {Slot = 1, Name = ""},
+    {Slot = 2, Name = ""},
+    {Slot = 3, Name = ""},
+    {Slot = 4, Name = ""},
+    {Slot = 5, Name = ""},
+    {Slot = 6, Name = ""},
+    {Slot = 7, Name = ""},
+    {Slot = 8, Name = ""},
+}
+
+
+
+local Message = {["Success"] = Color3.fromRGB(65,255,144); ["Info"] = Color3.fromRGB(226, 250, 6); ["Failed"] = Color3.fromRGB(255, 78, 65)}
+function Message:Send(Text, Type)
+    game.StarterGui:SetCore("ChatMakeSystemMessage", {
+        Text = "[Emote System]: "..Text;
+        Font = Enum.Font.Cartoon;
+        Color = Message[Type];
+        FontSize = Enum.FontSize.Size96;	
+    })
+end
+
+local Caches = {
+    EmoteSettings = {};
+}
+
+local Autoload, SettingsE;
+function Caches:CheckSettings()
+    if Caches.EmoteSettings['Autoload'] then
+        SettingsE = HttpService:JSONDecode(readfile("Emote-System/EmoteSave.txt")) or EquippedEmotes
+
+        return Caches.EmoteSettings['Autoload'], SettingsE
+    end
+
+    if isfolder('Emote-System') then
+        Autoload = readfile("Emote-System/AutoLoad.txt") or false
+        SettingsE = HttpService:JSONDecode(readfile("Emote-System/EmoteSave.txt")) or EquippedEmotes
+
+        EquippedEmotes = SettingsE
+
+        Caches.EmoteSettings['Autoload'] = Autoload
+        return Caches.EmoteSettings['Autoload'], SettingsE
+    end
+    return nil, nil
+end
+
+function Caches:ChangeEmote(Humanoid, Pos, Emoticon)
+    if not Humanoid then return end
+    if not Pos then return end
+    if not Emoticon then return end
+
+    for i,v in pairs(EquippedEmotes) do
+        if v.Slot == tonumber(Pos) then
+            EquippedEmotes[i].Name = Emoticon
+        end
+    end
+
+    Humanoid:SetEmotes(Emotes)
+    Humanoid:SetEquippedEmotes(EquippedEmotes)
+end
+
+
+function Caches:FindHumanoidDescription(Humanoid)
+    if not Humanoid then return end
+
+    local Success, Err = pcall(function()
+        local Fake = Humanoid.HumanoidDescription
+    end)
+
+    if Err then return false end
+        
+    return Humanoid.HumanoidDescription 
+end
+
+
+local AutoLoad, SettingsEmotes, Humanoid, HumanoidDescription;
+local function CharacterLoaded(Character)
+    AutoLoad, SettingsEmotes = Caches:CheckSettings()
+
+    Humanoid = Character:WaitForChild("Humanoid")
+
+    if (Humanoid.RigType ~= Enum.HumanoidRigType.R6) then
+        HumanoidDescription = Caches:FindHumanoidDescription(Humanoid)
+        
+        if Autoload and HumanoidDescription then
+            EquippedEmotes = SettingsEmotes
+            Message:Send("Autoloaded saved emotes!", "Success")
+        else
+            if HumanoidDescription then
+                EquippedEmotes = HumanoidDescription:GetEquippedEmotes()
+            end
+        end
+        
+        if HumanoidDescription then
+            for _,v in pairs(EquippedEmotes) do
+                Caches:ChangeEmote(HumanoidDescription, v.Slot, v.Name)
+                _,v = nil;
+            end
+        end
+    end
+end
+
+
+local CorrectText;
+local Commands = {
+    ["replace"] = function(args, msg)
+        msg:gsub('(%a*)%d(.*)', function(Text1, Text2)
+            CorrectText = Text2:sub(2)
+
+            if not table.find(EmoteChoices, CorrectText) then
+                Message:Send("Failed to Find '".. CorrectText .."'!", "Failed")
+                return
+            end
+
+            local Humanoid = LocalPlayer.Character:WaitForChild("Humanoid").HumanoidDescription
+            Caches:ChangeEmote(Humanoid, args[3], CorrectText)
+
+            Message:Send("Changed ".. args[3] .." To '"..CorrectText.."'!", "Success")
+        end)
+    end;
+
+    ['play'] = function(args, msg)
+        local Splited = string.split(msg, string.lower(args[2]))[2]
+        local Humanoid = LocalPlayer.Character:WaitForChild("Humanoid")
+        local EmoteText = string.gsub(Splited, "^%s*", "")
+
+        if not table.find(EmoteChoices, EmoteText) then
+            Message:Send("Failed to Find '".. EmoteText .."'!", "Failed")
+            return
+        end
+
+        Humanoid:PlayEmote(EmoteText)
+
+        Message:Send("Played ".. EmoteText .."!", "Success")
+    end;
+
+    ["help"] = function()
+        Message:Send("Check console (F9) for Emote Names! (or Syn Console)", "Info")
+        warn([[
+            Animation Changer finay#1197
+
+            Usage:
+
+            /e replace [Number on Emotes Wheel] [Emote name]
+            Ex: /e replace 3 Tree
+
+            /e play [Emote name]
+            Ex: /e replace Shrug
+
+            /e save -- Saves your current emote wheel 
+
+            /e load -- Loads your save
+
+            /e help -- prints out all emotes
+
+            /e autoload [boolen] (true or false) -- will auto load your save every time you reset
+
+            /e refresh -- refreshes emote wheel
+        ]])
+
+        table.foreach(EmoteChoices, print)
+    end;
+
+
+    ["save"] = function()
+        if isfolder("Emote-System") then
+            writefile("Emote-System/EmoteSave.txt", HttpService:JSONEncode(EquippedEmotes))
+        else
+            makefolder("Emote-System")
+            writefile("Emote-System/EmoteSave.txt", HttpService:JSONEncode(EquippedEmotes))
+            writefile("Emote-System/AutoLoad.txt", "true")
+        end
+
+        Message:Send("Saved current equipped emotes!", "Success")
+    end;
+
+    ["load"] = function()
+        EquippedEmotes = HttpService:JSONDecode(readfile("Emote-System/EmoteSave.txt"))
+        game.Players.LocalPlayer.Character:WaitForChild("Humanoid").HumanoidDescription:SetEquippedEmotes(EquippedEmotes)
+
+        Message:Send("Loaded last save!", "Success")
+    end;
+
+    ["autoload"] = function(args)
+
+        writefile('Emote-System/AutoLoad.txt', tostring(args[3]))
+        Message:Send("Set AutoLoad to "..args[3], "Success")
+    end;
+
+    ['refresh'] = function()
+        CharacterLoaded(LocalPlayer.Character)
+
+        Message:Send("Refreshed!", "Success")
+    end
+}
+
+local ChatArgs, Command;
+LocalPlayer.Chatted:Connect(function(Message)
+    ChatArgs = string.split(Message, " ")
+
+    if ChatArgs[1] == "/e" then
+        Command = Commands[string.lower(ChatArgs[2])]
+        
+        if Command then
+            Command(ChatArgs, Message)
+        end
+    end
+end)
+
+
+-- // credit to kiriot 
+local m = getmetatable(require(game:GetService("Chat"):WaitForChild("ClientChatModules"):WaitForChild("CommandModules"):WaitForChild("Util")))
+old = hookfunction(m.SendSystemMessageToSelf, function(self, msg, ...)
+    if msg == "You can't use that Emote." then
 		return
 	end
-	local i = #Emotes+1
-	Emotes[i] = {
-		["name"] = name,
-		["id"] = id,
-		["icon"] = "rbxthumb://type=Asset&id=".. id .."&w=150&h=150",
-		["price"] = price or 0,
-		["sort"] = {
-			["recentfirst"] = i
-		}
-	}
-end
-local CurrentSort = "recentfirst"
-
-local Cursor = ""
-while true do
-	local Response = game:HttpGetAsync("https://catalog.roblox.com/v1/search/items/details?Category=12&Subcategory=39&SortType=3&SortAggregation=&limit=30&cursor=".. Cursor .."&IncludeNotForSale=true")
-	local Body = HttpService:JSONDecode(Response)
-	for i,v in pairs(Body.data) do
-		AddEmote(v.name, v.id, v.price)
-	end
-	if Body.nextPageCursor ~= nil then
-		Cursor = Body.nextPageCursor
-	else
-		break
-	end
-end
-
---unreleased emotes
-AddEmote("Arm Wave", 5915773155)
-AddEmote("Head Banging", 5915779725)
-AddEmote("Face Calisthenics", 9830731012)
-
---sorting options setup
-table.sort(Emotes, function(a, b)
-	return a.sort.recentfirst > b.sort.recentfirst
-end)
-for i,v in pairs(Emotes) do
-	v.sort.recentlast = i
-end
-
-table.sort(Emotes, function(a, b)
-	return a.name:lower() < b.name:lower()
-end)
-for i,v in pairs(Emotes) do
-	v.sort.alphabeticfirst = i
-end
-
-table.sort(Emotes, function(a, b)
-	return a.name:lower() > b.name:lower()
-end)
-for i,v in pairs(Emotes) do
-	v.sort.alphabeticlast = i
-end
-
-table.sort(Emotes, function(a, b)
-	return a.price < b.price
-end)
-for i,v in pairs(Emotes) do
-	v.sort.lowestprice = i
-end
-
-table.sort(Emotes, function(a, b)
-	return a.price > b.price
-end)
-for i,v in pairs(Emotes) do
-	v.sort.highestprice = i
-end
-
-local FavoriteOff = "rbxassetid://10651060677"
-local FavoriteOn = "rbxassetid://10651061109"
-local FavoritedEmotes = {}
-
-if isfile("FavoritedEmotes.txt") then
-	if not pcall(function()
-		FavoritedEmotes = HttpService:JSONDecode(readfile("FavoritedEmotes.txt"))
-	end) then
-		FavoritedEmotes = {}
-	end
-else
-	writefile("FavoritedEmotes.txt", HttpService:JSONEncode(FavoritedEmotes))
-end
-
-local UpdatedFavorites = {}
-for i,name in pairs(FavoritedEmotes) do
-	if typeof(name) == "string" then
-		for i,emote in pairs(Emotes) do
-			if emote.name == name then
-				table.insert(UpdatedFavorites, emote.id)
-				break
-			end
-		end
-	end
-end
-if #UpdatedFavorites ~= 0 then
-	FavoritedEmotes = UpdatedFavorites
-	writefile("FavoritedEmotes.txt", HttpService:JSONEncode(FavoritedEmotes))
-end
-
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "Emotes"
-ScreenGui.DisplayOrder = 2
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Enabled = false
-
-local BackFrame = Instance.new("Frame")
-BackFrame.Size = UDim2.new(0.9, 0, 0.5, 0)
-BackFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-BackFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-BackFrame.SizeConstraint = Enum.SizeConstraint.RelativeYY
-BackFrame.BackgroundTransparency = 1
-BackFrame.BorderSizePixel = 0
-BackFrame.Parent = ScreenGui
-
-local EmoteName = Instance.new("TextLabel")
-EmoteName.Name = "EmoteName"
-EmoteName.TextScaled = true
-EmoteName.AnchorPoint = Vector2.new(0.5, 0.5)
-EmoteName.Position = UDim2.new(-0.1, 0, 0.5, 0)
-EmoteName.Size = UDim2.new(0.2, 0, 0.2, 0)
-EmoteName.SizeConstraint = Enum.SizeConstraint.RelativeYY
-EmoteName.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-EmoteName.TextColor3 = Color3.new(1, 1, 1)
-EmoteName.BorderSizePixel = 0
-EmoteName.Parent = BackFrame
-
-local Corner = Instance.new("UICorner")
-Corner.Parent = EmoteName
-
-local Frame = Instance.new("ScrollingFrame")
-Frame.Size = UDim2.new(1, 0, 1, 0)
-Frame.CanvasSize = UDim2.new(0, 0, 0, 0)
-Frame.AutomaticCanvasSize = Enum.AutomaticSize.Y
-Frame.ScrollingDirection = Enum.ScrollingDirection.Y
-Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-Frame.BackgroundTransparency = 1
-Frame.ScrollBarThickness = 5
-Frame.BorderSizePixel = 0
-Frame.MouseLeave:Connect(function()
-	EmoteName.Text = "Select an Emote"
-end)
-Frame.Parent = BackFrame
-
-local Grid = Instance.new("UIGridLayout")
-Grid.CellSize = UDim2.new(0.105, 0, 0, 0)
-Grid.CellPadding = UDim2.new(0.006, 0, 0.006, 0)
-Grid.SortOrder = Enum.SortOrder.LayoutOrder
-Grid.Parent = Frame
-
-local SortFrame = Instance.new("Frame")
-SortFrame.Visible = false
-SortFrame.BorderSizePixel = 0
-SortFrame.Position = UDim2.new(1, 5, -0.125, 0)
-SortFrame.Size = UDim2.new(0.2, 0, 0, 0)
-SortFrame.AutomaticSize = Enum.AutomaticSize.Y
-SortFrame.BackgroundTransparency = 1
-Corner:Clone().Parent = SortFrame
-SortFrame.Parent = BackFrame
-
-local SortList = Instance.new("UIListLayout")
-SortList.Padding = UDim.new(0.02, 0)
-SortList.HorizontalAlignment = Enum.HorizontalAlignment.Center
-SortList.VerticalAlignment = Enum.VerticalAlignment.Top
-SortList.SortOrder = Enum.SortOrder.LayoutOrder
-SortList.Parent = SortFrame
-
-local function SortEmotes()
-	for i,Emote in pairs(Emotes) do
-		local EmoteButton = Frame:FindFirstChild(Emote.id)
-		if not EmoteButton then
-			continue
-		end
-		local IsFavorited = table.find(FavoritedEmotes, Emote.id)
-		EmoteButton.LayoutOrder = Emote.sort[CurrentSort] + ((IsFavorited and 0) or #Emotes)
-		EmoteButton.number.Text = Emote.sort[CurrentSort]
-	end
-end
-
-local function createsort(order, text, sort)
-	local CreatedSort = Instance.new("TextButton")
-	CreatedSort.SizeConstraint = Enum.SizeConstraint.RelativeXX
-	CreatedSort.Size = UDim2.new(1, 0, 0.2, 0)
-	CreatedSort.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-	CreatedSort.LayoutOrder = order
-	CreatedSort.TextColor3 = Color3.new(1, 1, 1)
-	CreatedSort.Text = text
-	CreatedSort.TextScaled = true
-	CreatedSort.BorderSizePixel = 0
-	Corner:Clone().Parent = CreatedSort
-	CreatedSort.Parent = SortFrame
-	CreatedSort.MouseButton1Click:Connect(function()
-		SortFrame.Visible = false
-		CurrentSort = sort
-		SortEmotes()
-	end)
-	return CreatedSort
-end
-
-createsort(1, "Recently Updated First", "recentfirst")
-createsort(2, "Recently Updated Last", "recentlast")
-createsort(3, "Alphabetically First", "alphabeticfirst")
-createsort(4, "Alphabetically Last", "alphabeticlast")
-createsort(5, "Highest Price", "highestprice")
-createsort(6, "Lowest Price", "lowestprice")
-
-local SortButton = Instance.new("TextButton")
-SortButton.BorderSizePixel = 0
-SortButton.AnchorPoint = Vector2.new(0.5, 0.5)
-SortButton.Position = UDim2.new(0.925, -5, -0.075, 0)
-SortButton.Size = UDim2.new(0.15, 0, 0.1, 0)
-SortButton.TextScaled = true
-SortButton.TextColor3 = Color3.new(1, 1, 1)
-SortButton.BackgroundColor3 = Color3.new(0, 0, 0)
-SortButton.BackgroundTransparency = 0.3
-SortButton.Text = "Sort"
-SortButton.MouseButton1Click:Connect(function()
-	SortFrame.Visible = not SortFrame.Visible
-end)
-Corner:Clone().Parent = SortButton
-SortButton.Parent = BackFrame
-
-local CloseButton = Instance.new("TextButton")
-CloseButton.BorderSizePixel = 0
-CloseButton.AnchorPoint = Vector2.new(0.5, 0.5)
-CloseButton.Position = UDim2.new(0.075, 0, -0.075, 0)
-CloseButton.Size = UDim2.new(0.15, 0, 0.1, 0)
-CloseButton.TextScaled = true
-CloseButton.TextColor3 = Color3.new(1, 1, 1)
-CloseButton.BackgroundColor3 = Color3.new(0, 0, 0)
-CloseButton.BackgroundTransparency = 0.3
-CloseButton.Text = "Close"
-CloseButton.MouseButton1Click:Connect(function()
-	ScreenGui.Enabled = false
-end)
-Corner:Clone().Parent = CloseButton
-CloseButton.Parent = BackFrame
-
-local SearchBar = Instance.new("TextBox")
-SearchBar.BorderSizePixel = 0
-SearchBar.AnchorPoint = Vector2.new(0.5, 0.5)
-SearchBar.Position = UDim2.new(0.5, 0, -0.075, 0)
-SearchBar.Size = UDim2.new(0.55, 0, 0.1, 0)
-SearchBar.TextScaled = true
-SearchBar.PlaceholderText = "Search"
-SearchBar.TextColor3 = Color3.new(1, 1, 1)
-SearchBar.BackgroundColor3 = Color3.new(0, 0, 0)
-SearchBar.BackgroundTransparency = 0.3
-SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
-	local text = SearchBar.Text:lower()
-	local buttons = Frame:GetChildren()
-	if text ~= text:sub(1,50) then
-		SearchBar.Text = SearchBar.Text:sub(1,50)
-		text = SearchBar.Text:lower()
-	end
-	if text ~= ""  then
-		for i,button in pairs(buttons) do
-			if button:IsA("GuiButton") then
-				local name = button:GetAttribute("name"):lower()
-				if name:match(text) then
-					button.Visible = true
-				else
-					button.Visible = false
-				end
-			end
-		end
-	else
-		for i,button in pairs(buttons) do
-			if button:IsA("GuiButton") then
-				button.Visible = true
-			end
-		end
-	end
-end)
-Corner:Clone().Parent = SearchBar
-SearchBar.Parent = BackFrame
-
-local function openemotes(name, state, input)
-	if state == Enum.UserInputState.Begin then
-		ScreenGui.Enabled = not ScreenGui.Enabled
-	end
-end
-
-ContextActionService:BindCoreActionAtPriority(
-	"Emote Menu",
-	openemotes,
-	true,
-	2001,
-	Enum.KeyCode.Comma
-)
-
-local inputconnect
-ScreenGui:GetPropertyChangedSignal("Enabled"):Connect(function()
-	if ScreenGui.Enabled == true then
-		EmoteName.Text = "Select an Emote"
-		SearchBar.Text = ""
-		SortFrame.Visible = false
-		GuiService:SetEmotesMenuOpen(false)
-		inputconnect = UserInputService.InputBegan:Connect(function(input, processed)
-			if not processed then
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					ScreenGui.Enabled = false
-				end
-			end
-		end)
-	else
-		inputconnect:Disconnect()
-	end
+	return old(self, msg, ...)
 end)
 
-GuiService.EmotesMenuOpenChanged:Connect(function(isopen)
-	if isopen then
-		ScreenGui.Enabled = false
-	end
-end)
-
-GuiService.MenuOpened:Connect(function()
-	ScreenGui.Enabled = false
-end)
-
-if not game:IsLoaded() then
-	game.Loaded:Wait()
-end
-
---thanks inf yield
-local SynV3 = syn and DrawingImmediate
-if (not is_sirhurt_closure) and (not SynV3) and (syn and syn.protect_gui) then
-	syn.protect_gui(ScreenGui)
-	ScreenGui.Parent = CoreGui
-elseif get_hidden_gui or gethui then
-	local hiddenUI = get_hidden_gui or gethui
-	ScreenGui.Parent = hiddenUI()
-else
-	ScreenGui.Parent = CoreGui
-end
-
-local function SendNotification(title, text)
-	if syn and syn.toast_notification then
-		syn.toast_notification({
-			Type = ToastType.Error,
-			Title = title,
-			Content = text
-		})
-	else
-		StarterGui:SetCore("SendNotification", {
-			Title = title,
-			Text = text
-		})
-	end
-end
-
-local LocalPlayer = Players.LocalPlayer
-
-local function PlayEmote(name: string, id: IntValue)
-	ScreenGui.Enabled = false
-	SearchBar.Text = ""
-	local Humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-	local Description = Humanoid and Humanoid:FindFirstChildOfClass("HumanoidDescription")
-	if not Description then
-		return
-	end
-	if LocalPlayer.Character.Humanoid.RigType ~= Enum.HumanoidRigType.R6 then
-		local succ, err = pcall(function()
-			Humanoid:PlayEmoteAndGetAnimTrackById(id)
-		end)
-		if not succ then
-			Description:AddEmote(name, id)
-			Humanoid:PlayEmoteAndGetAnimTrackById(id)
-		end
-	else
-		SendNotification(
-			"r6? lol",
-			"you gotta be r15 dude"
-		)
-	end
-end
-
-local function WaitForChildOfClass(parent, class)
-	local child = parent:FindFirstChildOfClass(class)
-	while not child or child.ClassName ~= class do
-		child = parent.ChildAdded:Wait()
-	end
-	return child
-end
-
-local function CharacterAdded(Character)
-	for i,v in pairs(Frame:GetChildren()) do
-		if not v:IsA("UIGridLayout") then
-			v:Destroy()
-		end
-	end
-	local Humanoid = WaitForChildOfClass(Character, "Humanoid")
-	local Description = Humanoid:WaitForChild("HumanoidDescription", 5) or Instance.new("HumanoidDescription", Humanoid)
-	local random = Instance.new("TextButton")
-	local Ratio = Instance.new("UIAspectRatioConstraint")
-	Ratio.AspectType = Enum.AspectType.ScaleWithParentSize
-	Ratio.Parent = random
-	random.LayoutOrder = 0
-	random.TextColor3 = Color3.new(1, 1, 1)
-	random.BorderSizePixel = 0
-	random.BackgroundTransparency = 0.5
-	random.BackgroundColor3 = Color3.new(0, 0, 0)
-	random.TextScaled = true
-	random.Text = "Random"
-	random:SetAttribute("name", "")
-	Corner:Clone().Parent = random
-	random.MouseButton1Click:Connect(function()
-		local randomemote = Emotes[math.random(1, #Emotes)]
-		PlayEmote(randomemote.name, randomemote.id)
-	end)
-	random.MouseEnter:Connect(function()
-		EmoteName.Text = "Random"
-	end)
-	random.Parent = Frame
-	for i,Emote in pairs(Emotes) do
-		Description:AddEmote(Emote.name, Emote.id)
-		local EmoteButton = Instance.new("ImageButton")
-		local IsFavorited = table.find(FavoritedEmotes, Emote.id)
-		EmoteButton.LayoutOrder = Emote.sort[CurrentSort] + ((IsFavorited and 0) or #Emotes)
-		EmoteButton.Name = Emote.id
-		EmoteButton:SetAttribute("name", Emote.name)
-		Corner:Clone().Parent = EmoteButton
-		EmoteButton.Image = Emote.icon
-		EmoteButton.BackgroundTransparency = 0.5
-		EmoteButton.BackgroundColor3 = Color3.new(0, 0, 0)
-		EmoteButton.BorderSizePixel = 0
-		Ratio:Clone().Parent = EmoteButton
-		local EmoteNumber = Instance.new("TextLabel")
-		EmoteNumber.Name = "number"
-		EmoteNumber.TextScaled = true
-		EmoteNumber.BackgroundTransparency = 1
-		EmoteNumber.TextColor3 = Color3.new(1, 1, 1)
-		EmoteNumber.BorderSizePixel = 0
-		EmoteNumber.AnchorPoint = Vector2.new(0.5, 0.5)
-		EmoteNumber.Size = UDim2.new(0.2, 0, 0.2, 0)
-		EmoteNumber.Position = UDim2.new(0.1, 0, 0.9, 0)
-		EmoteNumber.Text = Emote.sort[CurrentSort]
-		EmoteNumber.TextXAlignment = Enum.TextXAlignment.Center
-		EmoteNumber.TextYAlignment = Enum.TextYAlignment.Center
-		local UIStroke = Instance.new("UIStroke")
-		UIStroke.Transparency = 0.5
-		UIStroke.Parent = EmoteNumber
-		EmoteNumber.Parent = EmoteButton
-		EmoteButton.Parent = Frame
-		EmoteButton.MouseButton1Click:Connect(function()
-			PlayEmote(Emote.name, Emote.id)
-		end)
-		EmoteButton.MouseEnter:Connect(function()
-			EmoteName.Text = Emote.name
-		end)
-		local Favorite = Instance.new("ImageButton")
-		Favorite.Name = "favorite"
-		if table.find(FavoritedEmotes, Emote.id) then
-			Favorite.Image = FavoriteOn
-		else
-			Favorite.Image = FavoriteOff
-		end
-		Favorite.AnchorPoint = Vector2.new(0.5, 0.5)
-		Favorite.Size = UDim2.new(0.2, 0, 0.2, 0)
-		Favorite.Position = UDim2.new(0.9, 0, 0.9, 0)
-		Favorite.BorderSizePixel = 0
-		Favorite.BackgroundTransparency = 1
-		Favorite.Parent = EmoteButton
-		Favorite.MouseButton1Click:Connect(function()
-			local index = table.find(FavoritedEmotes, Emote.id)
-			if index then
-				table.remove(FavoritedEmotes, index)
-				Favorite.Image = FavoriteOff
-				EmoteButton.LayoutOrder = Emote.sort[CurrentSort] + #Emotes
-			else
-				table.insert(FavoritedEmotes, Emote.id)
-				Favorite.Image = FavoriteOn
-				EmoteButton.LayoutOrder = Emote.sort[CurrentSort]
-			end
-			writefile("FavoritedEmotes.txt", HttpService:JSONEncode(FavoritedEmotes))
-		end)
-	end
-	for i=1,9 do
-		local EmoteButton = Instance.new("Frame")
-		EmoteButton.LayoutOrder = 2147483647
-		EmoteButton.Name = "filler"
-		EmoteButton.BackgroundTransparency = 1
-		EmoteButton.BorderSizePixel = 0
-		Ratio:Clone().Parent = EmoteButton
-		EmoteButton.Visible = true
-		EmoteButton.Parent = Frame
-		EmoteButton.MouseEnter:Connect(function()
-			EmoteName.Text = "Select an Emote"
-		end)
-	end
-end
 
 if LocalPlayer.Character then
-	CharacterAdded(LocalPlayer.Character)
+    CharacterLoaded(LocalPlayer.Character)
 end
-LocalPlayer.CharacterAdded:Connect(CharacterAdded)
+
+LocalPlayer.CharacterAdded:Connect(CharacterLoaded)
